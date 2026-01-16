@@ -17,7 +17,13 @@ router.post("/register", async (req, res) => {
     const { password, ...others } = user._doc;
     res.status(201).json(others);
   } catch (err) {
-    res.status(500).json(err);
+    if (err.code === 11000) {
+      // Duplicate key error
+      const field = Object.keys(err.keyPattern)[0];
+      res.status(400).json({ message: `${field} already exists` });
+    } else {
+      res.status(500).json({ message: err.message || "Registration failed" });
+    }
   }
 });
 
@@ -30,14 +36,14 @@ router.post("/login", async (req, res) => {
     const valid = await bcrypt.compare(req.body.password, user.password);
     if (!valid) return res.status(400).json("Wrong credentials");
 
-    const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET || "secret", {
+    const token = jwt.sign({ id: String(user._id), isAdmin: user.isAdmin }, process.env.JWT_SECRET || "secret", {
       expiresIn: "7d",
     });
 
     const { password, ...others } = user._doc;
     res.status(200).json({ ...others, token });
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: err.message || "Login failed" });
   }
 });
 
