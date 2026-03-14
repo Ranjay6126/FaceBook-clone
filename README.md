@@ -96,8 +96,6 @@ Notifications system
 
 Dark mode UI
 
-Deployment on cloud platforms (Render / Vercel / MongoDB Atlas)
-
 📌 Status
 
 This project is actively under development. New features and improvements are continuously being added to make the application closer to a real-world social media platform.
