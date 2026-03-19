@@ -85,6 +85,27 @@ The project is divided into two main folders:
 Each part follows modular coding practices for easy scalability and maintenance.
 
 🔄 Future Enhancements
+Tech Used
+
+React
+
+JavaScript
+
+HTML
+
+CSS
+
+Future Improvements
+
+More React projects
+
+Advanced Hooks
+
+API Integration
+
+Routing
+
+State Management
 
 Real-time chat system
 
