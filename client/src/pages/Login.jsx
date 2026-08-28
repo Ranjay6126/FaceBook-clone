@@ -1,82 +1,76 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
-import { setUser } from "../utils/storage";
+import { getUser, setUser } from "../utils/storage";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [msg, setMsg] = useState("");
+  const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
+
+  // Already logged in? Go straight to the feed.
+  useEffect(() => {
+    if (getUser()) navigate("/", { replace: true });
+  }, [navigate]);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setBusy(true);
+    setMsg("");
     try {
       const res = await API.post("/auth/login", form);
       setUser(res.data);
-      setMsg("Logged in successfully!");
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      navigate("/", { replace: true });
     } catch (err) {
-      const errorMsg = err?.response?.data?.message || err?.response?.data || "Login failed";
+      const errorMsg =
+        err?.response?.data?.message || err?.response?.data || "Login failed";
       setMsg(typeof errorMsg === "string" ? errorMsg : JSON.stringify(errorMsg));
+      setBusy(false);
     }
   };
 
   return (
-    <div className="auth">
-      <div className="landing-logo" style={{ marginBottom: "20px" }}>
-        <span className="landing-logo-icon">f</span>
-        <span className="landing-logo-text">facebook</span>
-      </div>
-      <h2>Log in to Facebook</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="auth-page">
+      <form className="auth-card card" onSubmit={handleSubmit}>
+        <h1 className="fb-wordmark auth-wordmark">facebook</h1>
+        <h2 className="auth-title">Log in to Facebook</h2>
         <input
+          className="input"
           name="email"
           type="email"
-          placeholder="Email address or phone number"
+          placeholder="Email address"
           value={form.email}
           onChange={handleChange}
           required
         />
         <input
+          className="input"
           name="password"
-          placeholder="Password"
           type="password"
+          placeholder="Password"
           value={form.password}
           onChange={handleChange}
           required
         />
-        <button type="submit">Log In</button>
-        <div style={{ textAlign: "center", marginTop: "16px" }}>
-          <a
-            href="#"
-            style={{ color: "#1877f2", fontSize: "14px", textDecoration: "none" }}
-          >
-            Forgotten password?
-          </a>
-        </div>
-        <div style={{ borderTop: "1px solid #dadde1", marginTop: "20px", paddingTop: "20px" }}>
-          <button
-            type="button"
-            onClick={() => navigate("/register")}
-            style={{
-              background: "#42b72a",
-              color: "#ffffff",
-              padding: "12px",
-              borderRadius: "6px",
-              fontWeight: "600",
-              fontSize: "16px",
-              width: "100%",
-            }}
-          >
-            Create New Account
-          </button>
-        </div>
+        <button className="btn-primary btn-block" type="submit" disabled={busy}>
+          {busy ? "Logging in..." : "Log In"}
+        </button>
+        {msg && <p className="msg-error">{msg}</p>}
+        <button type="button" className="btn-link">
+          Forgotten password?
+        </button>
+        <hr className="divider" />
+        <button
+          type="button"
+          className="btn-success btn-block"
+          onClick={() => navigate("/register")}
+        >
+          Create New Account
+        </button>
       </form>
-      <p style={{ color: "#ff0000" }}>{msg}</p>
     </div>
   );
 }
