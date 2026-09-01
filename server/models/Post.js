@@ -13,10 +13,21 @@ const PostSchema = new mongoose.Schema(
     img: {
       type: String,
     },
+    video: {
+      type: String,
+    },
     likes: {
       type: Array,
       default: [],
     },
+    comments: [
+      {
+        userId: { type: String },
+        username: { type: String },
+        text: { type: String, required: true },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );
