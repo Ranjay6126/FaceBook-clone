@@ -2,8 +2,14 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const IMAGES_DIR = path.join(__dirname, "..", "public", "images");
-fs.mkdirSync(IMAGES_DIR, { recursive: true });
+const IMAGES_DIR =
+  process.env.UPLOAD_DIR || path.join(__dirname, "..", "public", "images");
+
+try {
+  fs.mkdirSync(IMAGES_DIR, { recursive: true });
+} catch (e) {
+  console.warn("Could not create upload dir:", e.message);
+}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, IMAGES_DIR),
@@ -16,7 +22,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// Accept images AND videos (posts and messages can carry both now)
 const fileFilter = (req, file, cb) => {
   if (/^(image|video)\//.test(file.mimetype)) cb(null, true);
   else cb(new Error("Only image or video files are allowed"));
@@ -25,5 +30,5 @@ const fileFilter = (req, file, cb) => {
 module.exports = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB (videos can be big)
+  limits: { fileSize: 50 * 1024 * 1024 },
 });
