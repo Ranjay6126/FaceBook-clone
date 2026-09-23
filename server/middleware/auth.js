@@ -1,5 +1,14 @@
 const jwt = require("jsonwebtoken");
 
+function getJwtSecret() {
+  const s = process.env.JWT_SECRET;
+  if (s) return s;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("JWT_SECRET env var is required in production. Add it in Vercel project settings.");
+  }
+  return "dev-secret-change-me-please";
+}
+
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1] || req.headers.token;
   
@@ -7,7 +16,14 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json("You are not authenticated!");
   }
 
-  jwt.verify(token, process.env.JWT_SECRET || "secret", (err, user) => {
+  let secret;
+  try {
+    secret = getJwtSecret();
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+
+  jwt.verify(token, secret, (err, user) => {
     if (err) return res.status(403).json("Token is not valid!");
     req.user = user;
     next();
