@@ -16,6 +16,7 @@ import { ChatProvider } from "./context/ChatContext";
 import { CallProvider } from "./context/CallContext";
 import ChatDock from "./components/ChatDock";
 import CallOverlay from "./components/CallOverlay";
+import MobileBottomNav from "./components/MobileBottomNav";
 import { getUser } from "./utils/storage";
 import "./App.css";
 
@@ -83,6 +84,18 @@ export default function App() {
           }
         />
         <Route
+          path="/gaming"
+          element={
+            <RequireAuth>
+              <PlaceholderPage
+                kind="gaming"
+                title="Gaming"
+                text="Play cloud games, watch live streams, and connect with gamers in your network. Gaming hub will be available soon!"
+              />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/groups"
           element={
             <RequireAuth>
@@ -110,13 +123,24 @@ export default function App() {
             </RequireAuth>
           }
         />
+        <Route
+          path="/notifications"
+          element={
+            <RequireAuth>
+              <PlaceholderPage
+                kind="notifications"
+                title="Notifications"
+                text="Pull to refresh notifications. Real notifications show up as badges on the home icon above!"
+              />
+            </RequireAuth>
+          }
+        />
 
         <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-          {/* Floating Messenger chat windows live above every page */}
           <ChatDock />
-          {/* Full-screen audio/video call UI */}
           <CallOverlay />
+          <MobileBottomNav />
         </CallProvider>
       </ChatProvider>
     </BrowserRouter>

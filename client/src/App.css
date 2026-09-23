@@ -59,10 +59,16 @@ button {
    logo/search hug the left edge and action buttons hug the right edge */
 .header {
   position: sticky; top: 0; z-index: 100;
-  display: grid; grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 12px; height: 60px; padding: 0 16px;
+  display: flex; flex-direction: column;
   background: var(--card); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.header-top-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  height: 60px;
+  padding: 0 16px;
 }
 .header-left { display: flex; align-items: center; gap: 8px; justify-self: start; }
 .fb-logo {
@@ -74,20 +80,25 @@ button {
 }
 .fb-logo:hover { background: var(--fb-blue-hover); }
 .header-search {
-  display: flex; align-items: center; gap: 6px;
-  background: var(--bg); border-radius: 20px; padding: 9px 14px;
-  width: min(260px, 28vw);
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg); border-radius: 24px; padding: 10px 18px;
+  width: min(400px, 38vw);
+  height: 44px;
 }
+.header-search .search-icon { color: var(--muted); flex-shrink: 0; }
 .header-search input { background: transparent; border: none; outline: none; font-size: 14px; width: 100%; }
 
 /* Center tabs: identical fixed width + uniform gap => icons are exactly
    equidistant from each other, and the whole group sits dead-center */
-.header-tabs { display: flex; gap: 6px; height: 100%; justify-self: center; align-items: center; }
+.header-tabs {
+  display: flex; gap: 2px; height: 100%;
+  justify-self: center; align-items: center;
+}
 .tab {
-  width: 112px; height: 52px; background: transparent;
-  font-size: 22px; color: var(--muted);
+  width: 120px; height: 56px; background: transparent;
+  font-size: 24px; color: var(--muted);
   display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 12px; position: relative;
+  border-radius: 10px; position: relative;
   transition: background 0.15s ease, color 0.15s ease;
 }
 .tab:hover { background: var(--bg); }
@@ -104,6 +115,76 @@ button {
   background: var(--bg); font-weight: 600; font-size: 14px; cursor: pointer;
 }
 .me-chip:hover { filter: brightness(0.96); }
+
+/* Profile avatar + down-chevron button (desktop header right end) */
+.me-avatar-btn {
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 2px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+.me-avatar-btn:hover { background: var(--bg); }
+.me-avatar-btn > [class*="avatar-"] {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50%;
+}
+.me-avatar-chev {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #303338;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--card);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  transform: translate(1px, 1px);
+}
+.me-avatar-chev > svg { display: block; line-height: 0; }
+
+/* Apps-grid button in right header: plain dark grey circle, exactly like Messenger/Notifications buttons */
+.apps-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--divider);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: none;
+  box-sizing: border-box;
+  transition: background 0.15s ease;
+}
+.apps-btn > svg { display: block; }
+.apps-btn:hover { background: #d8dadf; }
+.header-right .apps-btn {
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+}
+.apps-btn.desktop-only {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* Layout – sidebars pinned to the far left / far right edges, feed centered */
 .container {
@@ -134,6 +215,20 @@ button {
   font-size: 18px; flex-shrink: 0;
 }
 .sidebar-footer { padding: 12px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--divider); }
+.sb-link {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px; border-radius: 8px;
+  font-weight: 500; font-size: 15px; cursor: pointer;
+  width: 100%; text-align: left;
+  background: transparent;
+  border: none;
+  color: inherit;
+  text-decoration: none;
+}
+.sb-link:hover { background: var(--bg); }
+.sb-link.active { background: #e7f3ff; color: var(--fb-blue); font-weight: 600; }
+.sb-toggle { margin-top: 4px; }
+.sb-toggle-icon { font-size: 14px !important; }
 
 /* Create post */
 .create-post { display: flex; align-items: center; gap: 10px; padding: 14px 16px; }
@@ -223,6 +318,25 @@ button {
 .sponsored-title { font-weight: 600; font-size: 14px; }
 .sponsored-sub { font-size: 12px; color: var(--muted); }
 
+/* Birthdays section (right sidebar) */
+.rb-birthdays { border-top: 1px solid var(--divider); border-bottom: 1px solid var(--divider); }
+.birthday-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 2px;
+}
+.birthday-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, #ffd7e0 0%, #f1b6d3 100%);
+  color: #e41e3f;
+  font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.birthday-body {
+  flex: 1; min-width: 0;
+  font-size: 14px; color: var(--text); line-height: 1.35;
+}
+
 /* Facebook wordmark */
 .fb-wordmark {
   color: var(--fb-blue); font-family: Helvetica, Arial, sans-serif;
@@ -262,6 +376,7 @@ button {
   /* Right sidebar folds away first; left sidebar + feed share the row */
   .container { grid-template-columns: minmax(210px, 250px) minmax(0, 1fr); justify-content: start; }
   .rightbar { display: none; }
+  .tab { width: 96px; font-size: 22px; }
 }
 @media (max-width: 950px) {
   /* Slimmer center tabs + compact search/profile chip so nothing overflows */
@@ -269,6 +384,9 @@ button {
   .header-search { width: 190px; }
   .me-chip span { display: none; }
   .me-chip { padding: 4px; border-radius: 50%; gap: 0; }
+  .apps-btn, .header-right .apps-btn { width: 40px; height: 40px; font-size: 20px; }
+  .header-right .icon-btn { width: 40px; height: 40px; font-size: 20px; }
+  .me-avatar-chev { width: 16px; height: 16px; font-size: 8px; transform: translate(1px, 1px); }
 }
 @media (max-width: 800px) {
   /* Phone / small tablet: single-column feed, app-style header */
@@ -412,17 +530,67 @@ button {
 .empty-state { padding: 2rem; text-align: center; color: var(--muted); }
 
 /* Friends page */
-.friend-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.friend-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
 .friend-card {
   overflow: hidden; display: flex; flex-direction: column;
-  gap: 8px; padding-bottom: 12px;
+  padding-bottom: 14px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
 }
-.friend-card .avatar-link { width: 100%; }
-.friend-name { font-weight: 600; font-size: 16px; padding: 0 12px; }
-.friend-card button {
-  margin: 0 12px; display: inline-flex;
-  align-items: center; justify-content: center; gap: 8px;
+.friend-card .avatar-link,
+.friend-photo-wrap { width: 100%; display: block; }
+.friend-photo-wrap {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  display: block;
+  overflow: hidden;
 }
+.friend-photo-wrap .avatar,
+.friend-photo-wrap [class*="avatar-"] {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+  font-size: 58px !important;
+}
+.friend-name {
+  font-weight: 700; font-size: 17px;
+  padding: 12px 14px 6px;
+  color: var(--text);
+  text-decoration: none;
+  display: block;
+}
+.friend-name:hover { text-decoration: underline; }
+.friend-card-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  padding: 10px 14px 0;
+  margin-top: auto;
+}
+.fbtn {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px !important;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  min-width: 0;
+}
+.fbtn-follow {
+  background: #1b74e4;
+  color: #fff;
+}
+.fbtn-follow:hover { background: #1877f2; filter: brightness(0.97); }
+.fbtn-remove {
+  background: #e4e6eb;
+  color: #050505;
+}
+.fbtn-remove:hover { background: #d8dadf; }
 .row-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
 .row-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 8px; }
 .row-item:hover { background: var(--bg); }
@@ -1948,73 +2116,324 @@ button.as-btn { background: transparent; padding: 4px; }
 .composer-spacer { flex: 0 0 4px; }
 .composer-mini {
   flex: 0 0 auto;
-  width: 42px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 50%;
-  background: transparent;
-  font-size: 30px;
+  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background 0.15s ease;
 }
-.composer-mini.red { color: #f3425f; }
-.composer-mini.green { color: #45bd62; }
-.composer-mini.blue { color: #1877f2; }
-.composer-mini:hover { background: var(--bg); }
+.composer-mini.red { color: #f3425f; background: #fde7ea; }
+.composer-mini.red:hover { background: #f8d3d9; }
+.composer-mini.green { color: #45bd62; background: #e7f7ea; }
+.composer-mini.green:hover { background: #d1efd7; }
+.composer-mini.blue { color: #f779ba; background: #fde8f3; }
+.composer-mini.blue:hover { background: #f9d1e4; }
 
-/* --- One-line feed toolbar: composer + search, just below stories --- */
-.feed-toolbar {
+/* =========================================================
+   v8 – Mobile-first Facebook app layout (matches reference image)
+   ========================================================= */
+
+/* --- Utility: visibility breakpoints --- */
+.mobile-only { display: none !important; }
+.desktop-only { display: initial; }
+
+/* --- Header structure: top-row + optional nav-row below --- */
+.header {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  padding: 0;
+  gap: 0;
+}
+.header-top-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  height: 60px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.header-top-row .header-left { grid-column: 1; }
+.header-top-row .header-right { grid-column: 3; }
+
+.header-search {
+  width: min(280px, 40vw);
+}
+.header-search.desktop-only {
+  display: flex;
+  min-width: 0;
+}
+.header-search input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Wordmark (facebook blue text) – only on mobile */
+.fb-wordmark {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  color: var(--fb-blue);
+  letter-spacing: -1.5px;
+  font-size: 30px;
+  line-height: 1;
+  user-select: none;
+  margin-right: auto;
+}
+
+/* Circle buttons (mobile search + hamburger) */
+.icon-btn.circle-btn {
+  background: var(--bg);
+  width: 42px;
+  height: 42px;
+  font-size: 19px;
+}
+.icon-btn.circle-btn:hover { background: #e4e6eb; }
+
+/* --- Mobile 5-icon nav row (directly below top bar) --- */
+.mobile-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  padding: 0 6px;
+  border-top: 1px solid var(--divider);
+  box-sizing: border-box;
+}
+.m-nav-item {
+  position: relative;
+  flex: 1;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--muted);
+  transition: color 0.15s ease, background 0.15s ease;
+  cursor: pointer;
+}
+.m-nav-item:hover { background: var(--bg); }
+.m-nav-item.active { color: var(--fb-blue); }
+.m-nav-item.active::after {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: var(--fb-blue);
+}
+.m-nav-item .badge,
+.m-badge {
+  position: absolute;
+  top: 8px;
+  right: calc(50% - 26px);
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  font-size: 11px;
+  border-radius: 999px;
+  background: #e41e3f;
+  color: #fff;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--card);
+  pointer-events: none;
+}
+
+/* Mobile hamburger menu panel (top-right dropdown) */
+.m-menu {
+  width: 300px;
+  max-width: calc(100vw - 24px);
+  right: 8px;
+}
+
+/* --- Sticky bottom navigation bar (mobile) --- */
+.mobile-bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  background: var(--card);
+  border-top: 1px solid var(--divider);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.06);
+}
+.bn-item {
+  position: relative;
+  flex: 1;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 22px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.bn-item:hover { background: var(--bg); }
+.bn-item.active {
+  color: var(--fb-blue);
+  background: #e7f3ff;
+}
+
+/* Bottom nav pop-up menu panel (above 5th button) */
+.bn-menu-panel {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: calc(100% + 8px);
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 10px;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.22);
+  animation: pop-in 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bn-menu-head {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 6px 4px;
 }
-.feed-toolbar .create-post { flex: 1; min-width: 0; }
-.feed-search {
-  position: relative;
-  display: flex; align-items: center; gap: 6px;
-  background: var(--bg); border-radius: 20px;
-  padding: 9px 14px; width: 230px; flex-shrink: 0;
+.bn-menu-head-mid { flex: 1; min-width: 0; }
+.bn-menu-name {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
 }
-.feed-search input {
-  background: transparent; border: none; outline: none;
-  font-size: 14px; width: 100%;
+.bn-menu-sub {
+  background: transparent;
+  padding: 0;
+  color: var(--fb-blue);
+  font-size: 13px;
+  font-weight: 600;
 }
-@media (max-width: 900px) {
-  .feed-toolbar { flex-wrap: wrap; }
-  .feed-search { width: 100%; }
+.bn-menu-sub:hover { text-decoration: underline; }
+.bn-menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 6px 0;
+  border-top: 1px solid var(--divider);
+  border-bottom: 1px solid var(--divider);
 }
-
-/* --- Photo/video messages --- */
-.chat-media {
-  display: block;
-  max-width: 200px;
-  max-height: 240px;
+.bn-menu-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 10px;
+  background: transparent;
   border-radius: 10px;
-  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: left;
 }
-.chat-bubble .chat-text { display: block; word-wrap: break-word; }
-.chat-attach-preview {
-  position: relative;
-  margin: 0 10px 6px;
+.bn-menu-row:hover { background: var(--bg); }
+.bn-menu-row .sb-icon { margin-bottom: 2px; }
+.bn-menu-footer { padding: 4px; }
+.bn-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--divider);
+  color: var(--text);
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
 }
-.chat-attach-preview img,
-.chat-attach-preview video {
-  display: block;
-  max-width: 140px;
-  max-height: 90px;
-  border-radius: 8px;
-}
-.chat-attach-preview .preview-remove {
-  top: 4px;
-  right: 4px;
-  width: 22px;
-  height: 22px;
-  font-size: 11px;
+.bn-logout-btn:hover { background: #d8dadf; }
+
+/* --- Responsive breakpoints --- */
+
+/* Tablets (≤ 950px) – keep desktop tabs, compact sidebar */
+@media (max-width: 950px) {
+  .header-search { width: min(220px, 38vw); }
+  .tab { width: 66px; font-size: 20px; }
+  .me-chip span { display: none; }
+  .me-chip { padding: 4px; border-radius: 50%; gap: 0; }
+  .fb-wordmark { display: none !important; }
 }
 
-/* --- Bigger call / video-call / close icons in the chat header --- */
+/* Phones (≤ 800px) – switch to mobile app layout */
+@media (max-width: 800px) {
+  .mobile-only { display: flex !important; }
+  span.mobile-only, .fb-wordmark.mobile-only { display: inline-block !important; }
+  .desktop-only { display: none !important; }
+
+  body { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+
+  .container {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 10px 8px calc(16px + 64px + env(safe-area-inset-bottom));
+    gap: 10px;
+  }
+  .sidebar, .rightbar, .header-tabs { display: none !important; }
+  .header-search { display: none !important; }
+
+  .header-top-row {
+    height: 56px;
+    padding: 0 10px;
+    gap: 8px;
+  }
+  .fb-logo { width: 40px; height: 40px; font-size: 30px; padding: 0; }
+
+  .header { position: sticky; top: 0; z-index: 100; }
+
+  .create-post { padding: 10px 12px; gap: 8px; }
+  .create-post input {
+    padding: 10px 14px;
+    font-size: 15px;
+  }
+
+  .stories-tray {
+    margin: 0 -8px;
+    padding-left: 8px;
+    padding-right: 16px;
+  }
+}
+
+/* Small phones (≤ 560px) */
+@media (max-width: 560px) {
+  .header-top-row { height: 54px; padding: 0 8px; }
+  .fb-logo { width: 36px; height: 36px; font-size: 26px; }
+  .fb-wordmark { font-size: 27px; }
+  .m-nav-item { height: 52px; font-size: 22px; }
+  .bn-item { height: 48px; font-size: 20px; }
+
+  .container {
+    padding: 8px 6px calc(12px + 60px + env(safe-area-inset-bottom));
+    gap: 8px;
+  }
+  .post-header, .post-content { padding: 10px 12px; }
+  .story-card { width: 104px; height: 184px; }
+}
+
+/* --- Legacy message thread header icon sizing --- */
 .chat-head .icon-action {
   width: 42px;
   height: 42px;
