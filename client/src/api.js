@@ -2,7 +2,7 @@ import axios from "axios";
 import { getUser } from "./utils/storage";
 
 // Locally Vite and Express run on separate ports; deployed builds are served
-// by Express, so relative requests keep the API on the Render service origin.
+// by Express, so relative requests keep the API on the Vercel service origin.
 const defaultApiUrl = import.meta.env.PROD ? "/api" : "http://localhost:8800/api";
 const apiBaseUrl = import.meta.env.VITE_API_URL || defaultApiUrl;
 
