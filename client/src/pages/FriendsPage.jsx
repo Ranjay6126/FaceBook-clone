@@ -86,18 +86,22 @@ export default function FriendsPage() {
                   <Link to={`/profile/${u._id}`} className="friend-name">
                     {u.username}
                   </Link>
-                  <button
-                    className="btn-primary btn-block"
-                    onClick={() => follow(u)}
-                  >
-                    <FaUserPlus /> Follow
-                  </button>
-                  <button
-                    className="btn-light btn-block"
-                    onClick={() => removeSuggestion(u)}
-                  >
-                    Remove
-                  </button>
+                  <div className="friend-card-actions">
+                    <button
+                      className="btn-primary fbtn fbtn-follow"
+                      type="button"
+                      onClick={() => follow(u)}
+                    >
+                      <FaUserPlus /> Follow
+                    </button>
+                    <button
+                      className="btn-light fbtn fbtn-remove"
+                      type="button"
+                      onClick={() => removeSuggestion(u)}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
