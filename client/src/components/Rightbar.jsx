@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaChartLine, FaHeadphones, FaFacebookMessenger } from "react-icons/fa";
+import { FaChartLine, FaHeadphones, FaFacebookMessenger, FaGift } from "react-icons/fa";
 import API from "../api";
 import Avatar from "./Avatar";
 import { getUser } from "../utils/storage";
@@ -94,6 +94,21 @@ export default function Rightbar() {
           <div>
             <div className="sponsored-title">Listen anywhere</div>
             <div className="sponsored-sub">music.app</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rightbar-section card rb-birthdays">
+        <h4>Birthdays</h4>
+        <div className="birthday-row">
+          <span className="birthday-icon">
+            <FaGift />
+          </span>
+          <div className="birthday-body">
+            <div>
+              <strong>Priya Sharma</strong> and <strong>2 others</strong> have
+              birthdays today.
+            </div>
           </div>
         </div>
       </div>
