@@ -3,6 +3,15 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+function getJwtSecret() {
+  const s = process.env.JWT_SECRET;
+  if (s) return s;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("JWT_SECRET env var is required in production. Add it in Vercel project settings.");
+  }
+  return "dev-secret-change-me-please";
+}
+
 // Register
 router.post("/register", async (req, res) => {
   try {
@@ -36,7 +45,7 @@ router.post("/login", async (req, res) => {
     const valid = await bcrypt.compare(req.body.password, user.password);
     if (!valid) return res.status(400).json("Wrong credentials");
 
-    const token = jwt.sign({ id: String(user._id), isAdmin: user.isAdmin }, process.env.JWT_SECRET || "secret", {
+    const token = jwt.sign({ id: String(user._id), isAdmin: user.isAdmin }, getJwtSecret(), {
       expiresIn: "7d",
     });
 
