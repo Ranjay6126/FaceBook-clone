@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
+  FaChevronLeft,
   FaChevronRight,
   FaPlus,
   FaTimes,
@@ -10,6 +11,7 @@ import {
 import API, { errMsg, fileUrl } from "../api";
 import Avatar from "./Avatar";
 import { getUser } from "../utils/storage";
+import { optimizeImage } from "../utils/image";
 
 /**
  * Home-page stories tray supporting BOTH photo and video stories:
@@ -87,7 +89,7 @@ export default function Stories() {
               {s.video ? (
                 <video src={fileUrl(s.video)} muted playsInline preload="metadata" />
               ) : (
-                <img src={fileUrl(s.img)} alt="" />
+                <img src={fileUrl(s.img)} alt="" loading="lazy" decoding="async" />
               )}
               <span className="story-avatar">
                 <Avatar
@@ -165,7 +167,7 @@ function CreateStoryModal({ onClose, onCreated }) {
     try {
       const fd = new FormData();
       fd.append("caption", caption.trim());
-      fd.append("media", file); // server routes image vs video by mimetype
+      fd.append("media", await optimizeImage(file)); // Videos pass through unchanged.
       const res = await API.post("/stories", fd);
       onCreated(res.data);
     } catch (err) {
@@ -409,6 +411,7 @@ function StoryViewer({ stories, startIndex, myId, onClose, onDeleted }) {
             key={story._id}
             src={fileUrl(story.img)}
             alt={story.caption || "Story"}
+            decoding="async"
           />
         )}
 

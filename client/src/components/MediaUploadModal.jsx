@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import API from "../api";
+import { optimizeImage } from "../utils/image";
 
 /**
  * Shared upload modal used from inside profiles:
@@ -57,7 +58,7 @@ export default function MediaUploadModal({
     try {
       const fd = new FormData();
       fd.append("desc", desc.trim());
-      fd.append("img", file); // server routes image vs video by mimetype
+      fd.append("img", await optimizeImage(file)); // Videos pass through unchanged.
       const res = await API.post("/posts", fd);
       onCreated(res.data);
     } catch (err) {

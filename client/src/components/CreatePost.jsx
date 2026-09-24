@@ -4,6 +4,7 @@ import Avatar from "./Avatar";
 import MediaUploadModal from "./MediaUploadModal";
 import API, { errMsg } from "../api";
 import { getUser } from "../utils/storage";
+import { optimizeImage } from "../utils/image";
 
 export default function CreatePost({ onNew }) {
   const [desc, setDesc] = useState("");
@@ -52,7 +53,7 @@ export default function CreatePost({ onNew }) {
         // Photo post -> multipart/form-data
         const fd = new FormData();
         fd.append("desc", text);
-        fd.append("img", file);
+        fd.append("img", await optimizeImage(file));
         res = await API.post("/posts", fd);
       } else {
         res = await API.post("/posts", { desc: text });

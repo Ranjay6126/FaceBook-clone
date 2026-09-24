@@ -19,6 +19,7 @@ import MediaUploadModal from "../components/MediaUploadModal";
 import Avatar from "../components/Avatar";
 import API, { fileUrl } from "../api";
 import { getUser } from "../utils/storage";
+import { optimizeImage } from "../utils/image";
 
 export default function ProfilePage() {
   const { id } = useParams();
@@ -117,8 +118,8 @@ export default function ProfilePage() {
       fd.append("desc", form.desc);
       fd.append("city", form.city);
       fd.append("from", form.from);
-      if (profilePic) fd.append("profilePicture", profilePic);
-      if (coverPic) fd.append("coverPicture", coverPic);
+      if (profilePic) fd.append("profilePicture", await optimizeImage(profilePic));
+      if (coverPic) fd.append("coverPicture", await optimizeImage(coverPic));
       const res = await API.put("/users/update/me", fd);
       // Refresh the stored session so header/sidebar avatars update instantly
       localStorage.setItem("user", JSON.stringify(res.data));
@@ -389,7 +390,7 @@ export default function ProfilePage() {
                   rel="noreferrer"
                   title={p.desc || "Open photo"}
                 >
-                  <img src={fileUrl(p.img)} alt={p.desc || "Photo"} />
+                  <img src={fileUrl(p.img)} alt={p.desc || "Photo"} loading="lazy" decoding="async" />
                 </a>
               ))}
             </div>

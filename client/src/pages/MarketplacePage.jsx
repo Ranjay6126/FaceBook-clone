@@ -18,6 +18,7 @@ import API, { fileUrl } from "../api";
 import { getUser } from "../utils/storage";
 import { timeAgo } from "../utils/time";
 import { useChat } from "../context/ChatContext";
+import { optimizeImage } from "../utils/image";
 
 const CATS = [
   "All", "Vehicles", "Property Rentals", "Property Sales",
@@ -78,7 +79,7 @@ function Thumb({ listing }) {
       </span>
     );
   const url = fileUrl(listing.img);
-  if (url) return <img src={url} alt={listing.title} className="mk-img" />;
+  if (url) return <img src={url} alt={listing.title} className="mk-img" loading="lazy" decoding="async" />;
   return (
     <span className="mk-img mk-img-ph">
       <FaImage />
@@ -365,7 +366,7 @@ function CreateListingModal({ onClose, onCreated }) {
       fd.append("condition", condition);
       fd.append("location", location.trim());
       fd.append("desc", desc.trim());
-      if (file) fd.append("img", file);
+      if (file) fd.append("img", await optimizeImage(file));
       const res = await API.post("/marketplace", fd);
       onCreated(res.data);
     } catch (err) {
@@ -632,5 +633,3 @@ function ListingDetailModal({
     </div>
   );
 }
-
-

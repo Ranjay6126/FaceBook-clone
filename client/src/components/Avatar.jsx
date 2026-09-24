@@ -9,7 +9,7 @@ export default function Avatar({ src, name = "U", size = "" }) {
   const cls = "avatar" + (size ? " " + size : "");
   const url = fileUrl(src);
   if (url) {
-    return <img className={`${cls} avatar-img`} src={url} alt={name || "User"} />;
+    return <img className={`${cls} avatar-img`} src={url} alt={name || "User"} loading="lazy" decoding="async" />;
   }
   return <span className={cls}>{(name || "U").charAt(0).toUpperCase()}</span>;
 }

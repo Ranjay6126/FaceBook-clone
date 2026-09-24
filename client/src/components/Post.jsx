@@ -137,7 +137,7 @@ export default function Post({ post, onDeleted, onSaveChange }) {
       <div className="post-content">
         {post.desc && <div className="post-desc">{post.desc}</div>}
         {post.img && (
-          <img src={fileUrl(post.img)} alt="Post" className="post-image" />
+          <img src={fileUrl(post.img)} alt="Post" className="post-image" loading="lazy" decoding="async" />
         )}
         {post.video && (
           <video src={fileUrl(post.video)} controls className="post-video" />

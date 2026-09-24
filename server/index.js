@@ -77,7 +77,12 @@ app.use(morgan("common"));
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 
-app.use("/images", express.static(UPLOAD_DIR));
+// Upload names are unique, so cache each image at browsers/CDNs after its
+// first fetch instead of repeatedly reading it from the function filesystem.
+app.use(
+  "/images",
+  express.static(UPLOAD_DIR, { maxAge: "1y", immutable: true })
+);
 
 app.use(async (req, res, next) => {
   if (req.path.startsWith("/images") || req.path === "/api/health") {
