@@ -40,4 +40,40 @@ function saveUploadedMedia(file, folder = "uploads") {
   });
 }
 
-module.exports = { getMediaBucket, saveUploadedMedia, BUCKET_NAME };
+async function saveUploadedMediaChunks(chunks, filename, contentType, folder = "uploads") {
+  const bucket = getMediaBucket();
+  const safeFile = safeFilename(filename);
+  const stream = bucket.openUploadStream(safeFile, {
+    metadata: { contentType: contentType || "application/octet-stream", folder },
+  });
+  const completed = new Promise((resolve, reject) => {
+    stream.once("error", reject);
+    stream.once("finish", () => resolve(`/api/media/${stream.id.toString()}`));
+  });
+
+  try {
+    for (const chunk of chunks) {
+      const data = Buffer.isBuffer(chunk.data)
+        ? chunk.data
+        : Buffer.from(chunk.data.buffer, 0, chunk.data.position);
+      if (!stream.write(data)) {
+        await new Promise((resolve, reject) => {
+          stream.once("drain", resolve);
+          stream.once("error", reject);
+        });
+      }
+    }
+    stream.end();
+    return await completed;
+  } catch (error) {
+    stream.destroy(error);
+    throw error;
+  }
+}
+
+module.exports = {
+  getMediaBucket,
+  saveUploadedMedia,
+  saveUploadedMediaChunks,
+  BUCKET_NAME,
+};

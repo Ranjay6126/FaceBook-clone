@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import API from "../api";
 import { optimizeImage } from "../utils/image";
+import { uploadVideoPost } from "../utils/uploadVideo";
 
 /**
  * Shared upload modal used from inside profiles:
@@ -56,11 +57,15 @@ export default function MediaUploadModal({
     if (!file) return alert(`Select ${videoOnly ? "a video" : "a photo"} first.`);
     setBusy(true);
     try {
-      const fd = new FormData();
-      fd.append("desc", desc.trim());
-      fd.append("img", await optimizeImage(file)); // Videos pass through unchanged.
-      const res = await API.post("/posts", fd);
-      onCreated(res.data);
+      if (isVideo) {
+        onCreated(await uploadVideoPost(file, desc));
+      } else {
+        const fd = new FormData();
+        fd.append("desc", desc.trim());
+        fd.append("img", await optimizeImage(file));
+        const res = await API.post("/posts", fd);
+        onCreated(res.data);
+      }
     } catch (err) {
       alert(
         err?.response?.data?.message ||

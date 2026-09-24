@@ -5,6 +5,7 @@ import MediaUploadModal from "./MediaUploadModal";
 import API, { errMsg } from "../api";
 import { getUser } from "../utils/storage";
 import { optimizeImage } from "../utils/image";
+import { uploadVideoPost } from "../utils/uploadVideo";
 
 export default function CreatePost({ onNew }) {
   const [desc, setDesc] = useState("");
@@ -49,7 +50,9 @@ export default function CreatePost({ onNew }) {
     setBusy(true);
     try {
       let res;
-      if (file) {
+      if (file && isVideo) {
+        res = { data: await uploadVideoPost(file, text) };
+      } else if (file) {
         // Photo post -> multipart/form-data
         const fd = new FormData();
         fd.append("desc", text);
@@ -74,7 +77,7 @@ export default function CreatePost({ onNew }) {
     >
       {!expanded ? (
         <>
-          <Avatar src={user.profilePicture} name={user.username} />
+          <Avatar src={user.profilePicture} name={user.username} loading="eager" />
           <button
             type="button"
             className="composer-open"

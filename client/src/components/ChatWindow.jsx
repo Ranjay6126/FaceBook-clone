@@ -11,7 +11,7 @@ import Avatar from "./Avatar";
 import { getUser } from "../utils/storage";
 import { useChat } from "../context/ChatContext";
 import { useCall } from "../context/CallContext";
-import { optimizeImage } from "../utils/image";
+import { uploadMessageAttachment } from "../utils/uploadMessage";
 
 function timeLabel(date) {
   if (!date) return "";
@@ -95,11 +95,7 @@ export default function ChatWindow({ partner }) {
     try {
       let res;
       if (file) {
-        const fd = new FormData();
-        fd.append("receiver", otherId);
-        fd.append("text", body);
-        fd.append("file", await optimizeImage(file)); // Videos pass through unchanged.
-        res = await API.post("/messages", fd);
+        res = { data: await uploadMessageAttachment(file, otherId, body) };
         clearAttachment();
       } else {
         res = await API.post("/messages", { receiver: otherId, text: body });

@@ -10,7 +10,7 @@ import Avatar from "../components/Avatar";
 import API, { errMsg, fileUrl } from "../api";
 import { getUser } from "../utils/storage";
 import { timeAgo } from "../utils/time";
-import { optimizeImage } from "../utils/image";
+import { uploadMessageAttachment } from "../utils/uploadMessage";
 
 /** Full-page Facebook-style inbox: conversation list + message thread. */
 export default function MessagesPage() {
@@ -95,11 +95,7 @@ export default function MessagesPage() {
     try {
       let res;
       if (file) {
-        const fd = new FormData();
-        fd.append("receiver", activeId);
-        fd.append("text", body);
-        fd.append("file", await optimizeImage(file)); // Videos pass through unchanged.
-        res = await API.post("/messages", fd);
+        res = { data: await uploadMessageAttachment(file, activeId, body) };
         clearAttachment();
       } else {
         res = await API.post("/messages", { receiver: activeId, text: body });

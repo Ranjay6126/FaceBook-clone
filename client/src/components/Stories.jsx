@@ -68,7 +68,7 @@ export default function Stories() {
           >
             <span className="story-create-avatar">
               {me.profilePicture ? (
-                <Avatar src={me.profilePicture} name={me.username} />
+                <Avatar src={me.profilePicture} name={me.username} loading="eager" />
               ) : (
                 <FaUser className="story-silhouette" />
               )}

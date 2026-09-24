@@ -15,6 +15,7 @@ import Avatar from "../components/Avatar";
 import Reel from "../components/Reel";
 import API, { fileUrl } from "../api";
 import { getUser } from "../utils/storage";
+import { MAX_VIDEO_UPLOAD_BYTES, uploadVideoPost } from "../utils/uploadVideo";
 
 /**
  * Reels: full-height, snap-scrolling feed built from VIDEO posts only.
@@ -132,12 +133,18 @@ function CreateReelModal({ onClose, onCreated }) {
   const [isVideo, setIsVideo] = useState(false);
   const [desc, setDesc] = useState("");
   const [busy, setBusy] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const pickFile = (e) => {
     const f = e.target.files && e.target.files[0];
     if (!f) return;
     if (!f.type.startsWith("video")) {
       alert("Reels can only be videos.");
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
+    if (f.size > MAX_VIDEO_UPLOAD_BYTES) {
+      alert("Reels must be 50 MB or smaller. Choose a shorter or smaller video.");
       if (fileRef.current) fileRef.current.value = "";
       return;
     }
@@ -150,6 +157,7 @@ function CreateReelModal({ onClose, onCreated }) {
     setFile(null);
     setPreview("");
     setIsVideo(false);
+    setUploadProgress(0);
     if (fileRef.current) fileRef.current.value = "";
   };
 
@@ -158,11 +166,8 @@ function CreateReelModal({ onClose, onCreated }) {
     if (!file) return alert("Pick a video first.");
     setBusy(true);
     try {
-      const fd = new FormData();
-      fd.append("desc", desc.trim());
-      fd.append("img", file); // server routes image vs video by mimetype
-      const res = await API.post("/posts", fd);
-      onCreated(res.data);
+      const post = await uploadVideoPost(file, desc, setUploadProgress);
+      onCreated(post);
     } catch (err) {
       alert(
         err?.response?.data?.message ||
@@ -238,7 +243,7 @@ function CreateReelModal({ onClose, onCreated }) {
             className="btn-primary"
             disabled={busy || !file}
           >
-            {busy ? "Uploading…" : "Share reel"}
+            {busy ? `Uploading ${uploadProgress}%…` : "Share reel"}
           </button>
         </div>
       </form>

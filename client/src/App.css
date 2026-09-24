@@ -415,6 +415,13 @@ button {
    profile pictures ignore their small-circle size and blow up to full width
    (the giant-image bug in the friend-suggestion list). */
 .avatar-img { object-fit: cover; border-radius: 50%; }
+.create-post > .avatar-img,
+.story-create-avatar > .avatar-img,
+.story-avatar > .avatar-img {
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
 .avatar-lg { width: 100%; height: 160px; border-radius: 10px 10px 0 0; font-size: 42px; }
 .avatar-xl { width: 168px; height: 168px; font-size: 64px; border: 4px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
 .avatar-link { display: inline-flex; flex-shrink: 0; }
@@ -902,15 +909,27 @@ button.as-btn { background: transparent; padding: 4px; }
   align-items: flex-end;
   gap: 6px;
   max-width: 85%;
+  min-width: 0;
 }
 .chat-row.me { align-self: flex-end; flex-direction: row-reverse; }
 .chat-bubble {
+  max-width: 100%;
+  min-width: 0;
   background: var(--bg);
   border-radius: 16px;
   padding: 8px 12px;
   font-size: 14px;
   line-height: 1.35;
   word-wrap: break-word;
+}
+.chat-media {
+  display: block;
+  max-width: min(100%, 320px);
+  max-height: 360px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
 }
 .chat-row.me .chat-bubble {
   background: var(--fb-blue);
@@ -1845,13 +1864,13 @@ button.as-btn { background: transparent; padding: 4px; }
   right: -6px;
   transform: translateY(-50%);
   z-index: 5;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 50%;
   background: #fff;
   color: #050505;
-  font-size: 14px;
+  font-size: 17px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1902,8 +1921,8 @@ button.as-btn { background: transparent; padding: 4px; }
   z-index: 3;
   top: 7px;
   left: 7px;
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border: 3px solid #1877f2;
   border-radius: 50%;
   overflow: hidden;
@@ -1913,7 +1932,7 @@ button.as-btn { background: transparent; padding: 4px; }
   justify-content: center;
 }
 .story-avatar .avatar,
-.story-avatar .avatar-img { width: 100%; height: 100%; font-size: 18px; }
+.story-avatar .avatar-img { width: 100%; height: 100%; font-size: 17px; }
 
 .story-name {
   position: absolute;
@@ -1941,8 +1960,8 @@ button.as-btn { background: transparent; padding: 4px; }
 }
 .story-create-avatar {
   margin-top: 28px;
-  width: 76px;
-  height: 76px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
@@ -1951,7 +1970,7 @@ button.as-btn { background: transparent; padding: 4px; }
   background: #bcc0c4;
 }
 .story-create-avatar .avatar,
-.story-create-avatar .avatar-img { width: 76px; height: 76px; font-size: 30px; }
+.story-create-avatar .avatar-img { width: 64px; height: 64px; font-size: 26px; }
 .story-silhouette { font-size: 46px; color: #8a8d91; }
 .story-create-plus {
   z-index: 2;
@@ -2045,13 +2064,13 @@ button.as-btn { background: transparent; padding: 4px; }
 .story-time { font-size: 12px; opacity: 0.85; }
 .story-head-actions { margin-left: auto; display: flex; gap: 6px; }
 .story-action {
-  width: 34px;
-  height: 34px;
+  width: 42px;
+  height: 42px;
   border: none;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.18);
   color: #fff;
-  font-size: 14px;
+  font-size: 17px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2075,13 +2094,13 @@ button.as-btn { background: transparent; padding: 4px; }
   top: 50%;
   transform: translateY(-50%);
   z-index: 6;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.92);
   color: #050505;
-  font-size: 15px;
+  font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2092,9 +2111,14 @@ button.as-btn { background: transparent; padding: 4px; }
 .story-nav.next { right: -52px; }
 .story-nav:disabled { opacity: 0.35; cursor: default; }
 @media (max-width: 560px) {
-  .story-nav { background: rgba(0, 0, 0, 0.45); color: #fff; }
+  .story-nav { width: 48px; height: 48px; background: rgba(0, 0, 0, 0.55); color: #fff; }
   .story-nav.prev { left: 8px; }
   .story-nav.next { right: 8px; }
+  .story-action { width: 46px; height: 46px; font-size: 19px; }
+  .story-avatar { width: 40px; height: 40px; }
+  .story-card.create .story-create-avatar,
+  .story-card.create .story-create-avatar .avatar,
+  .story-card.create .story-create-avatar .avatar-img { width: 58px; height: 58px; }
 }
 
 /* --- Profile quick-create bar --- */
