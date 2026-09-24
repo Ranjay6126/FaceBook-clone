@@ -1,0 +1,28 @@
+# Dependencies and generated builds
+node_modules/
+client/node_modules/
+server/node_modules/
+client/dist/
+coverage/
+server/public/images/
+
+# Environment variables and local secrets
+.env
+.env.*
+!.env.example
+server/.env
+client/.env
+client/.env.*
+
+# Logs and temporary files
+*.log
+*-log.txt
+*-err.txt
+*-out.txt
+client/build_log.txt
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
