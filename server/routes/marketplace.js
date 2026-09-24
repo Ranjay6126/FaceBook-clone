@@ -3,6 +3,7 @@ const Listing = require("../models/Listing");
 const User = require("../models/User");
 const { verifyToken } = require("../middleware/auth");
 const upload = require("../middleware/upload");
+const { saveUploadedMedia } = require("../utils/media");
 
 // Mirror of the model enums, used to sanitize multipart form values
 const CATEGORIES = [
@@ -67,6 +68,7 @@ router.post("/", verifyToken, upload.single("img"), async (req, res) => {
 
     // The upload field is "img" for both kinds - route by mimetype
     const isVideo = req.file && /^video\//.test(req.file.mimetype);
+    const mediaUrl = req.file ? await saveUploadedMedia(req.file, "marketplace") : "";
 
     const newListing = new Listing({
       title: title.slice(0, 100),
@@ -85,8 +87,8 @@ router.post("/", verifyToken, upload.single("img"), async (req, res) => {
         typeof req.body.location === "string"
           ? req.body.location.trim().slice(0, 60)
           : "",
-      img: req.file && !isVideo ? "/images/" + req.file.filename : undefined,
-      video: req.file && isVideo ? "/images/" + req.file.filename : undefined,
+      img: req.file && !isVideo ? mediaUrl : undefined,
+      video: req.file && isVideo ? mediaUrl : undefined,
       seller: req.user.id,
     });
 

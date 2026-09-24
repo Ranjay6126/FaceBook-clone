@@ -18,7 +18,7 @@ import CreatePost from "../components/CreatePost";
 import MediaUploadModal from "../components/MediaUploadModal";
 import Avatar from "../components/Avatar";
 import API, { fileUrl } from "../api";
-import { getUser } from "../utils/storage";
+import { getUser, setUser } from "../utils/storage";
 import { optimizeImage } from "../utils/image";
 
 export default function ProfilePage() {
@@ -121,8 +121,10 @@ export default function ProfilePage() {
       if (profilePic) fd.append("profilePicture", await optimizeImage(profilePic));
       if (coverPic) fd.append("coverPicture", await optimizeImage(coverPic));
       const res = await API.put("/users/update/me", fd);
-      // Refresh the stored session so header/sidebar avatars update instantly
-      localStorage.setItem("user", JSON.stringify(res.data));
+      // The profile response has no auth token; keep the token from the
+      // current session while refreshing the cached profile fields.
+      const currentUser = getUser() || {};
+      setUser({ ...currentUser, ...res.data, token: currentUser.token || res.data.token });
       setEditing(false);
       setProfilePic(null);
       setCoverPic(null);

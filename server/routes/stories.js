@@ -3,6 +3,7 @@ const Story = require("../models/Story");
 const User = require("../models/User");
 const { verifyToken } = require("../middleware/auth");
 const upload = require("../middleware/upload");
+const { saveUploadedMedia } = require("../utils/media");
 
 // Attach author info (username / profilePicture) to every story
 async function enrichStories(stories) {
@@ -33,14 +34,15 @@ router.post("/", verifyToken, upload.single("media"), async (req, res) => {
     if (!req.file) return res.status(400).json("Pick a photo or video first");
     // The upload field is "media" for both kinds - route by mimetype
     const isVideo = req.file && /^video\//.test(req.file.mimetype);
+    const mediaUrl = await saveUploadedMedia(req.file, "stories");
     const caption =
       typeof req.body.caption === "string"
         ? req.body.caption.trim().slice(0, 100)
         : "";
     const newStory = new Story({
       userId: req.user.id,
-      img: req.file && !isVideo ? "/images/" + req.file.filename : undefined,
-      video: req.file && isVideo ? "/images/" + req.file.filename : undefined,
+      img: !isVideo ? mediaUrl : undefined,
+      video: isVideo ? mediaUrl : undefined,
       caption,
     });
     const saved = await newStory.save();

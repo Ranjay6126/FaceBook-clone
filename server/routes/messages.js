@@ -4,6 +4,7 @@ const User = require("../models/User");
 const Notification = require("../models/Notification");
 const { verifyToken } = require("../middleware/auth");
 const upload = require("../middleware/upload");
+const { saveUploadedMedia } = require("../utils/media");
 
 // Send a message (JSON text, or multipart/form-data with a photo OR video
 // in field "file" plus optional text)
@@ -24,12 +25,13 @@ router.post("/", verifyToken, upload.single("file"), async (req, res) => {
 
     // The upload field is "file" for both kinds - route by mimetype
     const isVideo = req.file && /^video\//.test(req.file.mimetype);
+    const mediaUrl = req.file ? await saveUploadedMedia(req.file, "messages") : "";
     const msg = await Message.create({
       sender: me,
       receiver,
       text,
-      img: req.file && !isVideo ? "/images/" + req.file.filename : undefined,
-      video: req.file && isVideo ? "/images/" + req.file.filename : undefined,
+      img: req.file && !isVideo ? mediaUrl : undefined,
+      video: req.file && isVideo ? mediaUrl : undefined,
       read: false,
     });
 

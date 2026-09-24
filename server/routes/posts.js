@@ -4,6 +4,7 @@ const User = require("../models/User");
 const Notification = require("../models/Notification");
 const { verifyToken } = require("../middleware/auth");
 const upload = require("../middleware/upload");
+const { saveUploadedMedia } = require("../utils/media");
 
 // Attach author info (username / profilePicture) to every post
 async function enrichPosts(posts) {
@@ -37,11 +38,12 @@ router.post("/", verifyToken, upload.single("img"), async (req, res) => {
     }
     // The upload field is "img" for both kinds - route by mimetype
     const isVideo = req.file && /^video\//.test(req.file.mimetype);
+    const mediaUrl = req.file ? await saveUploadedMedia(req.file, "posts") : "";
     // Only accept known fields - never trust client-sent userId / likes / comments
     const newPost = new Post({
       desc,
-      img: req.file && !isVideo ? "/images/" + req.file.filename : undefined,
-      video: req.file && isVideo ? "/images/" + req.file.filename : undefined,
+      img: req.file && !isVideo ? mediaUrl : undefined,
+      video: req.file && isVideo ? mediaUrl : undefined,
       userId: req.user.id,
     });
     const saved = await newPost.save();

@@ -20,7 +20,7 @@ A full-stack social media app built with React, Vite, Express, and MongoDB. It i
 - Database: MongoDB with Mongoose
 - Authentication: JSON Web Tokens (JWT)
 - Real-time features: Socket-based messaging and WebRTC calling
-- Media storage: Configured for uploaded media; production deployments need durable storage for files that must persist.
+- Media storage: MongoDB GridFS stores uploaded photos and videos so they persist across Vercel function instances.
 
 ## Project structure
 
@@ -46,4 +46,5 @@ The frontend runs at http://localhost:5173 and the API at http://localhost:8800.
 
 Deploy the frontend and Backedn API as two separate Vercel projects from this repository:
 
+Uploaded media is stored in the same MongoDB database configured by `MONGO_URL`; no third-party media service credentials are required. MongoDB GridFS keeps file data in `media.files` and `media.chunks`. The API streams files from `/api/media/:id` and supports byte ranges for video playback.
 

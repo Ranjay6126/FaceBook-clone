@@ -3,6 +3,7 @@ const User = require("../models/User");
 const Notification = require("../models/Notification");
 const { verifyToken } = require("../middleware/auth");
 const upload = require("../middleware/upload");
+const { saveUploadedMedia } = require("../utils/media");
 
 // Friend suggestions for the logged-in user.
 // NOTE: must be registered BEFORE "/:id" so "suggestions" isn't treated as an id.
@@ -51,9 +52,15 @@ router.put(
         if (typeof req.body[f] === "string") updates[f] = req.body[f].slice(0, 50);
       }
       if (req.files?.profilePicture?.[0])
-        updates.profilePicture = "/images/" + req.files.profilePicture[0].filename;
+        updates.profilePicture = await saveUploadedMedia(
+          req.files.profilePicture[0],
+          "profiles"
+        );
       if (req.files?.coverPicture?.[0])
-        updates.coverPicture = "/images/" + req.files.coverPicture[0].filename;
+        updates.coverPicture = await saveUploadedMedia(
+          req.files.coverPicture[0],
+          "covers"
+        );
 
       const user = await User.findByIdAndUpdate(req.user.id, updates, {
         new: true,

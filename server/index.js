@@ -5,7 +5,6 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const cors = require("cors");
 const path = require("path");
-const os = require("os");
 const fs = require("fs");
 
 const envPaths = [
@@ -18,6 +17,8 @@ for (const p of envPaths) {
   }
 }
 dotenv.config();
+
+const { getMediaBucket, BUCKET_NAME } = require("./utils/media");
 
 function buildMongoUrl() {
   if (process.env.MONGO_URL) return process.env.MONGO_URL;
@@ -33,11 +34,9 @@ function buildMongoUrl() {
 
 const MONGO_URL = buildMongoUrl();
 
-const IS_VERCEL = process.env.VERCEL === "1" || process.env.VERCEL_ENV !== undefined || process.env.VERCEL_URL !== undefined;
-
-const UPLOAD_DIR = IS_VERCEL
-  ? path.join(os.tmpdir(), "facebook-clone-images")
-  : path.join(__dirname, "public", "images");
+// Keep serving legacy/demo files from the repository directory. New uploads
+// are stored in MongoDB GridFS, which persists across Vercel invocations.
+const UPLOAD_DIR = path.join(__dirname, "public", "images");
 
 try {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
@@ -77,11 +76,18 @@ app.use(morgan("common"));
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 
-// Upload names are unique, so cache each image at browsers/CDNs after its
-// first fetch instead of repeatedly reading it from the function filesystem.
+// Retain support for older locally stored assets. New uploads use /api/media.
 app.use(
   "/images",
-  express.static(UPLOAD_DIR, { maxAge: "1y", immutable: true })
+  express.static(UPLOAD_DIR, {
+    maxAge: "1y",
+    immutable: true,
+    setHeaders: (res) =>
+      res.setHeader(
+        "Cache-Control",
+        "public, max-age=31536000, s-maxage=31536000, immutable"
+      ),
+  })
 );
 
 app.use(async (req, res, next) => {
@@ -102,7 +108,76 @@ app.get("/api/health", (_req, res) => {
     status: "ok",
     mongo: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
     uploadDir: UPLOAD_DIR,
+    mediaStorage: "mongodb-gridfs",
   });
+});
+
+app.get("/api/media/:id", async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: "Invalid media ID" });
+  }
+
+  const id = new mongoose.Types.ObjectId(req.params.id);
+  try {
+    const files = mongoose.connection.db.collection(`${BUCKET_NAME}.files`);
+    const file = await files.findOne({ _id: id });
+    if (!file) return res.status(404).json({ message: "Media not found" });
+
+    const length = file.length;
+    const contentType = file.metadata?.contentType || "application/octet-stream";
+    const etag = `"${id.toString()}"`;
+    res.set({
+      "Accept-Ranges": "bytes",
+      "Cache-Control": "public, max-age=31536000, immutable",
+      "Content-Type": contentType,
+      ETag: etag,
+      "Content-Disposition": "inline",
+    });
+    if (req.headers["if-none-match"] === etag) return res.status(304).end();
+
+    let start = 0;
+    let end = length - 1;
+    const range = req.headers.range;
+    if (range) {
+      const match = /^bytes=(\d*)-(\d*)$/.exec(range.trim());
+      if (!match || length === 0) {
+        return res.status(416).set("Content-Range", `bytes */${length}`).end();
+      }
+      if (!match[1]) {
+        const suffixLength = Number(match[2]);
+        if (!suffixLength) {
+          return res.status(416).set("Content-Range", `bytes */${length}`).end();
+        }
+        start = Math.max(0, length - suffixLength);
+      } else {
+        start = Number(match[1]);
+        if (match[2]) end = Math.min(Number(match[2]), length - 1);
+      }
+      if (start >= length || end < start) {
+        return res.status(416).set("Content-Range", `bytes */${length}`).end();
+      }
+      res.status(206).set({
+        "Content-Length": end - start + 1,
+        "Content-Range": `bytes ${start}-${end}/${length}`,
+      });
+    } else {
+      res.set("Content-Length", length);
+    }
+
+    const download = getMediaBucket().openDownloadStream(id, {
+      start,
+      end: end + 1,
+    });
+    download.on("error", (error) => {
+      console.error("MongoDB media read failed:", error.message);
+      if (!res.headersSent) res.status(404).end();
+      else res.destroy(error);
+    });
+    download.pipe(res);
+  } catch (error) {
+    console.error("MongoDB media lookup failed:", error.message);
+    if (!res.headersSent) res.status(500).json({ message: "Could not load media" });
+  }
 });
 
 const authRoute = require("./routes/auth");
