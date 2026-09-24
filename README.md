@@ -1,42 +1,38 @@
 # Facebook Clone
-Facebook Clone — MERN Stack
-Developed a full-stack social media platform featuring user authentication, profiles, posts with CRUD operations, likes, comments, sharing, friend requests, follow/unfollow, reels, real-time chat, audio/video calling, notifications, and marketplace functionality. Implemented Socket.IO, WebRTC, JWT authentication, MongoDB, Express.js, React.js, Node.js, and Cloudinary.
-A small Facebook-style social app built with React, Express, and MongoDB.
 
-# Features of Facebook clone are:
+A full-stack social media app built with React, Vite, Express, and MongoDB. It includes authentication, profiles, posts, stories, reels, messaging, notifications, calls, and a marketplace.
 
-Developed a full-stack social media application by utilizing MongoDB, Express.js, React.js, and Node.js.
+## Project structure
 
-Built a user authentication system with protected routes and user profiles by implementing JSON Web Tokens (JWT).
+- `client/` — React and Vite frontend
+- `server/` — Express API and MongoDB models
 
-Developed post creation, reading, updating, and deletion (CRUD) operations with likes, comments, shares, and media uploads.
+## Run locally
 
-Added friend requests, follow and unfollow, and interactive features for the users.
+1. Install dependencies in each app:
 
-Built a reels feature to host short videos.
+   ```sh
+   cd server && npm install
+   cd ../client && npm install
+   ```
 
-Created a one-to-one chat application using Sockets.
+2. Create `server/.env` with `MONGO_URL` and `JWT_SECRET`.
+3. Start the API from `server/` with `npm run dev`.
+4. In another terminal, start the frontend from `client/` with `npm run dev`.
 
-Enabled real-time video and audio calling by implementing WebRTC.
+The frontend runs at `http://localhost:5173` and the API at `http://localhost:8800`.
 
-Built a notification system that updated in real-time.
+## Deploy to Vercel
 
-Integrated Cloudinary to store images and videos.
+Deploy the frontend and API as two separate Vercel projects from this repository:
 
-Developed a Marketplace / Shopping section.
+1. Create a Vercel project with **Root Directory** set to `client`. Its `vercel.json` builds the Vite app into `dist` and supports client-side routes.
+2. Create another Vercel project with **Root Directory** set to `server`. Its `vercel.json` exposes the Express app as a Node.js function.
+3. Set `MONGO_URL` and `JWT_SECRET` in the server project's environment variables.
+4. Set `VITE_API_URL` in the client project to the server deployment's URL followed by `/api` (for example, `https://your-api.vercel.app/api`). Redeploy the client after setting it.
 
-Built a responsive user interface (UI) for desktop and mobile views using React.js.
+Vercel's function filesystem is temporary. User uploads stored by the server in Vercel's temporary directory will not persist between function invocations; use durable object storage for production uploads.
 
-## Run it locally
+## Ignore files
 
- Add MONGO_URL and JWT_SECRET to server/.env.
- Run npm run setup.
- Run npm run dev.
- Open http://localhost:5173.
-
-## Deploy on Vercel
-
-Push the project to GitHub and import the repository in Vercel.
-Add the required Environment Variables (MONGO_URL, JWT_SECRET) in Vercel
-Project Settings before deploying. See the included vercel.json for
-build configuration.
+The root `.gitignore` covers repository-wide secrets and generated files. The client and server each have an additional `.gitignore` for app-specific files.

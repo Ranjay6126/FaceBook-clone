@@ -1,9 +1,9 @@
 node_modules/
+dist/
 .vercel/
 .env
 .env.*
 !.env.example
-public/images/
 *.log
 .DS_Store
 Thumbs.db
