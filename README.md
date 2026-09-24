@@ -2,37 +2,48 @@
 
 A full-stack social media app built with React, Vite, Express, and MongoDB. It includes authentication, profiles, posts, stories, reels, messaging, notifications, calls, and a marketplace.
 
+# Features
+- Accounts and profiles: Register and log in securely, view profiles, and manage profile information.
+- Posts and interactions: Create, view, edit, and delete posts; like, comment on, and share content.
+- Friends and connections: Send friend requests and follow or unfollow other users.
+- Stories and reels: Share short-lived stories and short-form video content.
+- Messaging and calls: Chat with other users and support audio or video calls.
+- Notifications: Receive updates about activity and interactions.
+- Marketplace: Browse and create listings.
+- Media uploads: Add images and videos to posts and other content.
+- Responsive design: Use the app on desktop and mobile screens.
+
+
+# Technology
+- Frontend: React and Vite
+- Backend: Node.js and Express
+- Database: MongoDB with Mongoose
+- Authentication: JSON Web Tokens (JWT)
+- Real-time features: Socket-based messaging and WebRTC calling
+- Media storage: Configured for uploaded media; production deployments need durable storage for files that must persist.
+
 ## Project structure
 
-- `client/` — React and Vite frontend
-- `server/` — Express API and MongoDB models
+client/ — React and Vite frontend
+server/ — Express API and MongoDB models
 
 ## Run locally
 
-1. Install dependencies in each app:
+Install dependencies in each app:
 
-   ```sh
+
    cd server && npm install
    cd ../client && npm install
-   ```
+ 
 
-2. Create `server/.env` with `MONGO_URL` and `JWT_SECRET`.
-3. Start the API from `server/` with `npm run dev`.
-4. In another terminal, start the frontend from `client/` with `npm run dev`.
+ Create server/.env with MONGO_URL and JWT_SECRET.
+ Start the API from server/ with npm run dev.
+ In another terminal, start the frontend from client/ with npm run dev.
 
-The frontend runs at `http://localhost:5173` and the API at `http://localhost:8800`.
+The frontend runs at http://localhost:5173 and the API at http://localhost:8800.
 
 ## Deploy to Vercel
 
-Deploy the frontend and API as two separate Vercel projects from this repository:
+Deploy the frontend and Backedn API as two separate Vercel projects from this repository:
 
-1. Create a Vercel project with **Root Directory** set to `client`. Its `vercel.json` builds the Vite app into `dist` and supports client-side routes.
-2. Create another Vercel project with **Root Directory** set to `server`. Its `vercel.json` exposes the Express app as a Node.js function.
-3. Set `MONGO_URL` and `JWT_SECRET` in the server project's environment variables.
-4. Set `VITE_API_URL` in the client project to the server deployment's URL followed by `/api` (for example, `https://your-api.vercel.app/api`). Redeploy the client after setting it.
 
-Vercel's function filesystem is temporary. User uploads stored by the server in Vercel's temporary directory will not persist between function invocations; use durable object storage for production uploads.
-
-## Ignore files
-
-The root `.gitignore` covers repository-wide secrets and generated files. The client and server each have an additional `.gitignore` for app-specific files.
