@@ -23,7 +23,12 @@ export async function uploadVideoPost(file, desc = "", onProgress) {
   const { uploadId } = start.data;
 
   for (let index = 0; index < totalChunks; index += 1) {
-    const chunk = file.slice(index * CHUNK_BYTES, (index + 1) * CHUNK_BYTES);
+    // Some browsers report a sliced File as application/octet-stream. Keep
+    // the original video MIME type so Multer accepts each chunk as video.
+    const chunk = new Blob(
+      [file.slice(index * CHUNK_BYTES, (index + 1) * CHUNK_BYTES)],
+      { type: file.type }
+    );
     const data = new FormData();
     data.append("chunk", chunk, file.name);
     await API.post(`/posts/reel-upload/${uploadId}/chunk/${index}`, data);

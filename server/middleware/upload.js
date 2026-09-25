@@ -1,6 +1,10 @@
 const multer = require("multer");
 const fileFilter = (req, file, cb) => {
-  if (/^(image|video)\//.test(file.mimetype)) cb(null, true);
+  // Browsers and proxies can label multipart chunks as generic binary. The
+  // authenticated upload session validates the declared media type before
+  // accepting the assembled file.
+  const isMediaChunk = /\/(?:reel-upload|upload)\/[^/]+\/chunk\/\d+$/.test(req.path);
+  if (/^(image|video)\//.test(file.mimetype) || (isMediaChunk && file.mimetype === "application/octet-stream")) cb(null, true);
   else cb(new Error("Only image or video files are allowed"));
 };
 

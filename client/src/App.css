@@ -924,13 +924,30 @@ button.as-btn { background: transparent; padding: 4px; }
 }
 .chat-media {
   display: block;
-  max-width: min(100%, 320px);
-  max-height: 360px;
   width: auto;
+  max-width: min(100%, 240px);
+  max-height: 240px;
   height: auto;
   object-fit: contain;
   border-radius: 10px;
 }
+.chat-attach-preview {
+  position: relative;
+  align-self: flex-start;
+  max-width: calc(100% - 24px);
+  max-height: 180px;
+  margin: 8px 12px 0;
+}
+.chat-attach-preview img,
+.chat-attach-preview video {
+  display: block;
+  width: auto;
+  max-width: min(240px, calc(100vw - 72px));
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+.chat-attach-preview .preview-remove { top: 6px; right: 6px; }
 .chat-row.me .chat-bubble {
   background: var(--fb-blue);
   color: #fff;
@@ -945,6 +962,10 @@ button.as-btn { background: transparent; padding: 4px; }
 }
 .chat-compose {
   display: flex;
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   align-items: center;
   gap: 6px;
   padding: 8px 10px;
@@ -952,6 +973,7 @@ button.as-btn { background: transparent; padding: 4px; }
 }
 .chat-compose input {
   flex: 1;
+  min-width: 0;
   background: var(--bg);
   border: none;
   border-radius: 18px;
@@ -2154,23 +2176,29 @@ button.as-btn { background: transparent; padding: 4px; }
 .composer-spacer { flex: 0 0 4px; }
 .composer-mini {
   flex: 0 0 auto;
-  width: 44px;
-  height: 44px;
+  width: 50px;
+  height: 50px;
   border: none;
   border-radius: 50%;
-  font-size: 24px;
+  font-size: 29px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: background 0.15s ease;
 }
+.composer-mini svg { width: 29px; height: 29px; }
 .composer-mini.red { color: #f3425f; background: #fde7ea; }
 .composer-mini.red:hover { background: #f8d3d9; }
 .composer-mini.green { color: #45bd62; background: #e7f7ea; }
 .composer-mini.green:hover { background: #d1efd7; }
 .composer-mini.blue { color: #f779ba; background: #fde8f3; }
 .composer-mini.blue:hover { background: #f9d1e4; }
+
+@media (max-width: 760px) {
+  .composer-mini { width: 42px; height: 42px; }
+  .composer-mini svg { width: 34px; height: 34px; }
+}
 
 /* =========================================================
    v8 – Mobile-first Facebook app layout (matches reference image)
@@ -2473,7 +2501,8 @@ button.as-btn { background: transparent; padding: 4px; }
   .composer-collapsed { flex-wrap: nowrap; gap: 5px; padding: 8px; }
   .composer-collapsed .composer-open { padding: 10px 9px; font-size: 13px; }
   .composer-spacer { display: none; }
-  .composer-mini { width: 34px; height: 34px; font-size: 17px; }
+  .composer-mini { width: 40px; height: 40px; font-size: 21px; }
+  .composer-mini svg { width: 31px; height: 31px; }
 
   .mk-layout { padding: 8px 6px; gap: 10px; }
   .mk-side { padding: 10px; gap: 8px; }
