@@ -1116,7 +1116,8 @@ button.as-btn { background: transparent; padding: 4px; }
   width: 100%;
 }
 .mk-chips {
-  display: flex;
+  display: none;
+  align-items: center;
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 4px;
@@ -1208,10 +1209,23 @@ button.as-btn { background: transparent; padding: 4px; }
   margin-top: 2px;
 }
 @media (max-width: 900px) {
-  .mk-layout { grid-template-columns: 1fr; padding: 12px; }
-  .mk-side { position: static; }
-  .mk-cats { flex-direction: row; overflow-x: auto; max-height: none; }
-  .mk-cat { white-space: nowrap; }
+  .mk-layout { grid-template-columns: minmax(0, 1fr); padding: 12px; gap: 12px; }
+  .mk-side {
+    position: static;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+  }
+  .mk-side .mk-cats { display: none; }
+  .mk-side > .btn-primary { width: auto; white-space: nowrap; }
+  .mk-chips { display: flex; margin: -2px 0 2px; }
+  .mk-toolbar { align-items: stretch; }
+  .mk-tabs { flex: 1; }
+  .mk-tabs button { flex: 1; }
+  .mk-search { width: 100%; }
+  .mk-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 }
 /* --- Listing modals (create + detail) --- */
 .modal-overlay {
@@ -2455,6 +2469,32 @@ button.as-btn { background: transparent; padding: 4px; }
   }
   .post-header, .post-content { padding: 10px 12px; }
   .story-card { width: 104px; height: 184px; }
+
+  .composer-collapsed { flex-wrap: nowrap; gap: 5px; padding: 8px; }
+  .composer-collapsed .composer-open { padding: 10px 9px; font-size: 13px; }
+  .composer-spacer { display: none; }
+  .composer-mini { width: 34px; height: 34px; font-size: 17px; }
+
+  .mk-layout { padding: 8px 6px; gap: 10px; }
+  .mk-side { padding: 10px; gap: 8px; }
+  .mk-brand { font-size: 20px; }
+  .mk-side > .btn-primary { padding: 9px 10px; font-size: 12px; }
+  .mk-main { gap: 10px; }
+  .mk-toolbar { gap: 8px; }
+  .mk-tabs button { padding: 8px 7px; font-size: 12px; }
+  .mk-search { padding: 9px 12px; }
+  .mk-chips { gap: 6px; margin-right: -6px; padding-right: 6px; }
+  .mk-chips .chip { padding: 7px 11px; }
+  .mk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .mk-info { padding: 8px; }
+  .mk-price { font-size: 15px; }
+  .mk-title { font-size: 13px; }
+  .mk-loc { font-size: 11px; }
+  .mk-detail { max-height: calc(100dvh - 24px); }
+  .mk-detail-media { min-height: 200px; }
+  .mk-detail-info { padding: 16px; }
+  .mk-d-title { font-size: 19px; }
+  .mk-d-actions { flex-wrap: wrap; }
 }
 
 /* --- Legacy message thread header icon sizing --- */

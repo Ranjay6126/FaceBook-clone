@@ -71,9 +71,8 @@ export default function CreatePost({ onNew }) {
   };
 
   return (
-    <form
+    <div
       className={`create-post card composer${expanded ? "" : " composer-collapsed"}`}
-      onSubmit={handleSubmit}
     >
       {!expanded ? (
         <>
@@ -90,6 +89,7 @@ export default function CreatePost({ onNew }) {
             type="button"
             className="composer-mini red"
             title="Create video post"
+            aria-label="Create video post"
             onClick={() => setQuick("video")}
           >
             <FaVideo />
@@ -98,6 +98,7 @@ export default function CreatePost({ onNew }) {
             type="button"
             className="composer-mini green"
             title="Create photo post"
+            aria-label="Create photo post"
             onClick={() => setQuick("photo")}
           >
             <FaImage />
@@ -106,13 +107,14 @@ export default function CreatePost({ onNew }) {
             type="button"
             className="composer-mini blue"
             title="Create reel"
+            aria-label="Create reel"
             onClick={() => setQuick("reel")}
           >
             <FaFilm />
           </button>
         </>
       ) : (
-        <div className="composer-body">
+        <form className="composer-body" onSubmit={handleSubmit}>
           <div className="composer-top">
             <Avatar src={user.profilePicture} name={user.username} size="avatar-sm" />
             <textarea
@@ -168,7 +170,7 @@ export default function CreatePost({ onNew }) {
               {busy ? "Posting..." : "Post"}
             </button>
           </div>
-        </div>
+        </form>
       )}
       <input
         ref={fileRef}
@@ -196,6 +198,6 @@ export default function CreatePost({ onNew }) {
           }}
         />
       )}
-    </form>
+    </div>
   );
 }
