@@ -13,6 +13,18 @@ import { getUser } from "../utils/storage";
 import { timeAgo } from "../utils/time";
 import { uploadMessageAttachment } from "../utils/uploadMessage";
 
+function keepMessagesWhenUnchanged(previous, incoming) {
+  if (
+    previous.length === incoming.length &&
+    previous.every((message, index) => {
+      const next = incoming[index];
+      return String(message._id || message.createdAt) === String(next._id || next.createdAt) &&
+        message.text === next.text && message.img === next.img && message.video === next.video;
+    })
+  ) return previous;
+  return incoming;
+}
+
 /** Full-page Facebook-style inbox: conversation list + message thread. */
 export default function MessagesPage() {
   const me = getUser();
@@ -57,7 +69,7 @@ export default function MessagesPage() {
       try {
         // GETting the thread also marks the partner's messages as read
         const r = await API.get(`/messages/thread/${activeId}`);
-        setMessages(r.data || []);
+        setMessages((previous) => keepMessagesWhenUnchanged(previous, r.data || []));
       } catch {
         /* ignore transient poll errors */
       }

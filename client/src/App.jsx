@@ -12,6 +12,7 @@ import PlaceholderPage from "./pages/PlaceholderPage";
 import MarketplacePage from "./pages/MarketplacePage";
 import MessagesPage from "./pages/MessagesPage";
 import ReelsPage from "./pages/ReelsPage";
+import NotificationsPage from "./pages/NotificationsPage";
 import { ChatProvider } from "./context/ChatContext";
 import { CallProvider } from "./context/CallContext";
 import ChatDock from "./components/ChatDock";
@@ -127,11 +128,7 @@ export default function App() {
           path="/notifications"
           element={
             <RequireAuth>
-              <PlaceholderPage
-                kind="notifications"
-                title="Notifications"
-                text="Pull to refresh notifications. Real notifications show up as badges on the home icon above!"
-              />
+              <NotificationsPage />
             </RequireAuth>
           }
         />

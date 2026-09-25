@@ -837,6 +837,11 @@ button.as-btn { background: transparent; padding: 4px; }
   color: #fff;
   flex-shrink: 0;
 }
+.notifications-page { width: min(760px, calc(100% - 32px)); margin: 20px auto; overflow: hidden; }
+.notifications-page-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; }
+.notifications-page-head h2 { margin: 0; font-size: 22px; }
+.notifications-page-list { display: flex; flex-direction: column; gap: 4px; padding: 0 10px 12px; }
+.notifications-page .hd-empty { padding: 30px 16px; }
 .notif-chip.n-follow { background: #1877f2; }
 .notif-chip.n-like { background: #45bd62; }
 .notif-chip.n-comment { background: #f7b928; }
@@ -2231,6 +2236,21 @@ button.as-btn { background: transparent; padding: 4px; }
 @media (max-width: 760px) {
   .composer-mini { width: 42px; height: 42px; }
   .composer-mini svg { width: 34px; height: 34px; }
+}
+
+@media (max-width: 760px) {
+  .row-item { min-width: 0; flex-wrap: nowrap; gap: 8px; padding: 8px 6px; }
+  .row-item .avatar-link { flex: 0 0 40px; }
+  .row-item .row-name { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .row-item .following-badge { display: none; }
+  .row-item > .btn-light { flex: 0 0 auto; white-space: nowrap; padding: 8px 10px; font-size: 13px; }
+  .notifications-page { width: calc(100% - 16px); margin: 8px auto; }
+  .notifications-page-head { padding: 14px 12px; }
+  .notifications-page-head h2 { font-size: 20px; }
+  .notifications-page-list { padding: 0 6px 10px; }
+  .notifications-page .notif-row { gap: 8px; padding: 9px 6px; }
+  .notifications-page .notif-row > .avatar { flex: 0 0 40px; }
+  .notifications-page .notif-time { white-space: nowrap; }
 }
 
 /* =========================================================

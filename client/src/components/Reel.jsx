@@ -17,6 +17,7 @@ export default function Reel({ post }) {
   const me = getUser();
   const myId = me ? String(me._id || me.id) : "";
   const videoRef = useRef(null);
+  const visibleRef = useRef(false);
   const [playing, setPlaying] = useState(false);
   const [likes, setLikes] = useState(post.likes || []);
 
@@ -48,10 +49,15 @@ export default function Reel({ post }) {
       (entries) => {
         entries.forEach((en) => {
           if (en.intersectionRatio >= 0.6) {
+            visibleRef.current = true;
             v.play()
-              .then(() => setPlaying(true))
+              .then(() => {
+                if (visibleRef.current) setPlaying(true);
+                else v.pause();
+              })
               .catch(() => {});
-          } else if (!v.paused) {
+          } else {
+            visibleRef.current = false;
             v.pause();
             setPlaying(false);
           }
@@ -97,6 +103,7 @@ export default function Reel({ post }) {
             src={src}
             loop
             playsInline
+            muted
             preload="metadata"
             onClick={togglePlay}
           />

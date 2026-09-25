@@ -28,6 +28,18 @@ function timeLabel(date) {
   });
 }
 
+function keepMessagesWhenUnchanged(previous, incoming) {
+  if (
+    previous.length === incoming.length &&
+    previous.every((message, index) => {
+      const next = incoming[index];
+      return String(message._id || message.createdAt) === String(next._id || next.createdAt) &&
+        message.text === next.text && message.img === next.img && message.video === next.video;
+    })
+  ) return previous;
+  return incoming;
+}
+
 /**
  * One floating Facebook-style chat window (bottom-right dock).
  * Polls the thread every few seconds; reading it also marks
@@ -55,7 +67,7 @@ export default function ChatWindow({ partner }) {
     try {
       // GETting the thread also marks the partner's messages as read
       const res = await API.get(`/messages/thread/${otherId}`);
-      setMessages(res.data || []);
+      setMessages((previous) => keepMessagesWhenUnchanged(previous, res.data || []));
     } catch {
       /* transient poll errors are silently ignored */
     }
