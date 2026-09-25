@@ -7,6 +7,7 @@ import {
 } from "react-icons/fa";
 import Header from "../components/Header";
 import Avatar from "../components/Avatar";
+import ChatImageViewer from "../components/ChatImageViewer";
 import API, { errMsg, fileUrl } from "../api";
 import { getUser } from "../utils/storage";
 import { timeAgo } from "../utils/time";
@@ -22,6 +23,7 @@ export default function MessagesPage() {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
+  const [imageToView, setImageToView] = useState("");
   // Photo/video attachment being composed
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
@@ -210,7 +212,8 @@ export default function MessagesPage() {
                           <img
                             src={fileUrl(m.img)}
                             alt="Photo"
-                            className="chat-media"
+                            className="chat-media chat-image-clickable"
+                            onClick={() => setImageToView(fileUrl(m.img))}
                             loading="lazy"
                             decoding="async"
                           />
@@ -281,6 +284,7 @@ export default function MessagesPage() {
           )}
         </section>
       </div>
+      <ChatImageViewer src={imageToView} onClose={() => setImageToView("")} />
     </div>
   );
 }

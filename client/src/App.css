@@ -931,6 +931,34 @@ button.as-btn { background: transparent; padding: 4px; }
   object-fit: contain;
   border-radius: 10px;
 }
+.chat-media.chat-image-clickable { cursor: zoom-in; }
+.chat-image-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.9);
+}
+.chat-image-viewer img {
+  display: block;
+  max-width: min(96vw, 1400px);
+  max-height: 94vh;
+  object-fit: contain;
+}
+.chat-image-viewer button {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 22px;
+}
 .chat-attach-preview {
   position: relative;
   align-self: flex-start;
@@ -2051,8 +2079,8 @@ button.as-btn { background: transparent; padding: 4px; }
   background: #000;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
-.story-stage img,
-.story-stage video {
+.story-stage > img,
+.story-stage > video {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -2089,6 +2117,8 @@ button.as-btn { background: transparent; padding: 4px; }
 }
 .story-author {
   display: inline-flex;
+  min-width: 0;
+  flex: 0 1 auto;
   align-items: center;
   gap: 8px;
   color: #fff;
@@ -2096,10 +2126,13 @@ button.as-btn { background: transparent; padding: 4px; }
   font-size: 14px;
   font-weight: 600;
 }
+.story-head .avatar { width: 32px; height: 32px; flex: 0 0 32px; }
+.story-head .avatar-img { width: 32px; height: 32px; object-fit: cover; }
 .story-author:hover { text-decoration: underline; }
-.story-time { font-size: 12px; opacity: 0.85; }
+.story-time { flex: 0 0 auto; white-space: nowrap; font-size: 12px; opacity: 0.85; }
 .story-head-actions { margin-left: auto; display: flex; gap: 6px; }
 .story-action {
+  flex: 0 0 42px;
   width: 42px;
   height: 42px;
   border: none;

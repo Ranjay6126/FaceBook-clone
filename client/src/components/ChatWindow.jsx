@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 import API, { errMsg, fileUrl } from "../api";
 import Avatar from "./Avatar";
+import ChatImageViewer from "./ChatImageViewer";
 import { getUser } from "../utils/storage";
 import { useChat } from "../context/ChatContext";
 import { useCall } from "../context/CallContext";
@@ -42,6 +43,7 @@ export default function ChatWindow({ partner }) {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
+  const [imageToView, setImageToView] = useState("");
   // Photo/video attachment being composed
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
@@ -166,7 +168,7 @@ export default function ChatWindow({ partner }) {
               )}
               <div className="chat-bubble">
                 {m.img && (
-                  <img src={fileUrl(m.img)} alt="Photo" className="chat-media" loading="lazy" decoding="async" />
+                  <img src={fileUrl(m.img)} alt="Photo" className="chat-media chat-image-clickable" loading="lazy" decoding="async" onClick={() => setImageToView(fileUrl(m.img))} />
                 )}
                 {m.video && (
                   <video src={fileUrl(m.video)} controls className="chat-media" />
@@ -228,6 +230,7 @@ export default function ChatWindow({ partner }) {
           <FaPaperPlane />
         </button>
       </form>
+      <ChatImageViewer src={imageToView} onClose={() => setImageToView("")} />
     </div>
   );
 }
