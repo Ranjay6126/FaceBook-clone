@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
+try {
+  document.documentElement.dataset.theme = localStorage.getItem('fb_theme') === 'dark' ? 'dark' : 'light'
+} catch {}
+
 /* Fatal-error reporter: a crashed app must NEVER be a silent white page.
    IMPORTANT: this paints into a dedicated overlay OUTSIDE the React root.
    The old version wrote into #root while React still owned that DOM, so the
@@ -71,4 +75,3 @@ createRoot(document.getElementById('root')).render(
     </ErrorBoundary>
   </StrictMode>,
 )
-

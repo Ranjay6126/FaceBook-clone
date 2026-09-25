@@ -11,6 +11,68 @@
   --green-hover: #36a420;
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #18191a;
+  --card: #242526;
+  --text: #e4e6eb;
+  --muted: #b0b3b8;
+  --divider: #3e4042;
+  --fb-blue: #4599ff;
+  --fb-blue-hover: #3988eb;
+  --green: #55bd69;
+  --green-hover: #46aa5b;
+}
+
+html, body, #root { min-height: 100%; background: var(--bg); color: var(--text); }
+.page { color: var(--text); background: var(--bg); }
+.profile-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.theme-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
+
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .header,
+:root[data-theme="dark"] .mobile-bottom-nav,
+:root[data-theme="dark"] .hd-dropdown,
+:root[data-theme="dark"] .landing-header,
+:root[data-theme="dark"] .chat-window,
+:root[data-theme="dark"] .inbox-thread,
+:root[data-theme="dark"] .inbox-list {
+  background-color: var(--card);
+  color: var(--text);
+}
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] .input,
+:root[data-theme="dark"] .create-post input,
+:root[data-theme="dark"] .composer-open,
+:root[data-theme="dark"] .chat-compose input,
+:root[data-theme="dark"] .hd-search input {
+  color: var(--text);
+  background-color: #3a3b3c;
+}
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder { color: #b0b3b8; }
+:root[data-theme="dark"] .btn-light,
+:root[data-theme="dark"] .icon-btn.circle-btn,
+:root[data-theme="dark"] .icon-btn,
+:root[data-theme="dark"] .apps-btn,
+:root[data-theme="dark"] .chat-compose input {
+  color: var(--text);
+  background-color: #3a3b3c;
+}
+:root[data-theme="dark"] .profile-tab:hover,
+:root[data-theme="dark"] .row-item:hover,
+:root[data-theme="dark"] .convo-row:hover,
+:root[data-theme="dark"] .composer-open:hover,
+:root[data-theme="dark"] .attach-btn:hover {
+  background-color: #3a3b3c;
+}
+:root[data-theme="dark"] .notif-row.unread,
+:root[data-theme="dark"] .convo-row.active,
+:root[data-theme="dark"] .profile-tab.active { background-color: #263951; }
+:root[data-theme="dark"] .avatar-xl { border-color: var(--card); }
+
 #root { min-height: 100vh; background: var(--bg); }
 
 .card { background: var(--card); border-radius: 8px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }

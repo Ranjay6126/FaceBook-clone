@@ -11,6 +11,8 @@ import {
   FaImage,
   FaVideo,
   FaFilm,
+  FaMoon,
+  FaSun,
 } from "react-icons/fa";
 import Header from "../components/Header";
 import Post from "../components/Post";
@@ -33,6 +35,15 @@ export default function ProfilePage() {
   const [tab, setTab] = useState("posts");
   // Quick-create modal on your own profile: null | "photo" | "video" | "reel"
   const [uploadModal, setUploadModal] = useState(null);
+  const [theme, setTheme] = useState(() => {
+    try { return localStorage.getItem("fb_theme") === "dark" ? "dark" : "light"; }
+    catch { return "light"; }
+  });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem("fb_theme", theme); } catch {}
+  }, [theme]);
 
   // edit-profile form state
   const [form, setForm] = useState({ desc: "", city: "", from: "" });
@@ -217,9 +228,20 @@ export default function ProfilePage() {
               </span>
             </div>
             {isMe ? (
-              <button type="button" className="btn-light" onClick={() => setEditing(true)}>
-                <FaPencilAlt /> Edit profile
-              </button>
+              <div className="profile-controls">
+                <button type="button" className="btn-light" onClick={() => setEditing(true)}>
+                  <FaPencilAlt /> Edit profile
+                </button>
+                <button
+                  type="button"
+                  className="btn-light theme-toggle"
+                  aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                  onClick={() => setTheme((current) => current === "dark" ? "light" : "dark")}
+                >
+                  {theme === "dark" ? <FaSun /> : <FaMoon />}
+                  {theme === "dark" ? " Light mode" : " Dark mode"}
+                </button>
+              </div>
             ) : (
               <button
                 type="button"
